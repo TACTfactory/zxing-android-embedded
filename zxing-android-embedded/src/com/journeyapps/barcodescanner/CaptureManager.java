@@ -66,11 +66,11 @@ public class CaptureManager {
     private InactivityTimer inactivityTimer;
     private BeepManager beepManager;
 
-    private Handler handler;
+    protected Handler handler;
 
     private boolean finishWhenClosed = false;
 
-    private BarcodeCallback callback = new BarcodeCallback() {
+    protected BarcodeCallback callback = new BarcodeCallback() {
         @Override
         public void barcodeResult(final BarcodeResult result) {
             barcodeView.pause();
@@ -229,49 +229,8 @@ public class CaptureManager {
      * Call from Activity#onResume().
      */
     public void onResume() {
-        if(Build.VERSION.SDK_INT >= 23) {
-            openCameraWithPermission();
-        } else {
-            barcodeView.resume();
-        }
+        barcodeView.resume();
         inactivityTimer.start();
-    }
-
-    private boolean askedPermission = false;
-
-    @TargetApi(23)
-    private void openCameraWithPermission() {
-        if (ContextCompat.checkSelfPermission(this.activity, Manifest.permission.CAMERA)
-                == PackageManager.PERMISSION_GRANTED) {
-            barcodeView.resume();
-        } else if(!askedPermission) {
-            ActivityCompat.requestPermissions(this.activity,
-                    new String[]{Manifest.permission.CAMERA},
-                    cameraPermissionReqCode);
-            askedPermission = true;
-        } else {
-            // Wait for permission result
-        }
-    }
-
-    /**
-     * Call from Activity#onRequestPermissionsResult
-     * @param requestCode The request code passed in {@link android.support.v4.app.ActivityCompat#requestPermissions(Activity, String[], int)}.
-     * @param permissions The requested permissions.
-     * @param grantResults The grant results for the corresponding permissions
-     *     which is either {@link android.content.pm.PackageManager#PERMISSION_GRANTED}
-     *     or {@link android.content.pm.PackageManager#PERMISSION_DENIED}. Never null.
-     */
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        if(requestCode == cameraPermissionReqCode) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // permission was granted
-                barcodeView.resume();
-            } else {
-                // TODO: display better error message.
-                displayFrameworkBugMessageAndExit();
-            }
-        }
     }
 
     /**

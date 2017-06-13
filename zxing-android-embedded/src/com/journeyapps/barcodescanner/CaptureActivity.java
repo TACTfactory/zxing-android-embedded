@@ -2,7 +2,6 @@ package com.journeyapps.barcodescanner;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.view.KeyEvent;
 
 import com.google.zxing.client.android.R;
@@ -57,11 +56,6 @@ public class CaptureActivity extends Activity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         capture.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        capture.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
